@@ -27,7 +27,7 @@ class ERG_Shortcode_Handler {
         ob_start();
         ?>
         <!-- Top Header with Title and Controls (Outside container) -->
-        <div class="erg-top-header">
+        <div class="erg-top-header" id="expense_report_generator">
             <h2 class="erg-main-title"><?php echo esc_html(get_option('erg_main_title', 'Online Free Expense Report Generator')); ?></h2>
             <div class="erg-top-controls">
                 <button class="erg-customize-btn">Customize</button>
