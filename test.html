@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Report Generator Test</title>
+    <link rel="stylesheet" href="assets/css/expense-report.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/jspdf.min.js"></script>
+</head>
+<body style="padding: 20px; background: #f0f0f0;">
+    <h1>Expense Report Generator Test</h1>
+    <p>Testing the expense report shortcode functionality...</p>
+
+    <!-- This simulates what WordPress would output -->
+    <!-- Top Header with Title and Controls (Outside container) -->
+    <div class="erg-top-header">
+        <h2 class="erg-main-title">Online Free Expense Report Generator</h2>
+        <div class="erg-top-controls">
+            <button class="erg-customize-btn">Customize</button>
+            <button id="export-pdf-btn" class="erg-download-btn">Download PDF</button>
+        </div>
+    </div>
+
+    <div class="erg-expense-report-container">
+        <!-- Report Header -->
+        <div class="erg-report-header">
+            <div class="erg-company-info">
+                <div class="erg-editable-label" data-key="companyName">
+                    <span class="erg-label-text">Your Company Name</span>
+                    <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                    </svg>
+                </div>
+                <div class="erg-editable-label" data-key="companyAddress">
+                    <span class="erg-label-text">Company's Address</span>
+                    <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="erg-report-info">
+                <h1 class="erg-editable-label" data-key="reportTitle">
+                    <span class="erg-label-text">Expense Report</span>
+                    <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                    </svg>
+                </h1>
+                <div class="erg-report-number">ER-12345</div>
+            </div>
+        </div>
+
+        <!-- Report Details Section -->
+        <div class="erg-report-details">
+            <div class="erg-details-grid">
+                <div class="erg-detail-row">
+                    <label class="erg-editable-label" data-key="submittedBy">
+                        <span class="erg-label-text">Submitted By</span>
+                        <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                        </svg>
+                    </label>
+                    <input type="text" id="submitted-by" placeholder="Your Name">
+                </div>
+
+                <div class="erg-detail-row">
+                    <label class="erg-editable-label" data-key="submittedOn">
+                        <span class="erg-label-text">Submitted On</span>
+                        <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                        </svg>
+                    </label>
+                    <input type="date" id="submitted-on">
+                </div>
+
+                <div class="erg-detail-row">
+                    <label class="erg-editable-label" data-key="reportTo">
+                        <span class="erg-label-text">Report To</span>
+                        <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                        </svg>
+                    </label>
+                    <input type="text" id="report-to" placeholder="Manager Name">
+                </div>
+
+                <div class="erg-detail-row">
+                    <label class="erg-editable-label" data-key="reportingPeriod">
+                        <span class="erg-label-text">Reporting Period</span>
+                        <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                        </svg>
+                    </label>
+                    <div class="erg-date-range">
+                        <input type="date" id="period-from">
+                        <span>to</span>
+                        <input type="date" id="period-to">
+                    </div>
+                </div>
+
+                <div class="erg-detail-row">
+                    <label class="erg-editable-label" data-key="reportTitleLabel">
+                        <span class="erg-label-text">Report Title</span>
+                        <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                        </svg>
+                    </label>
+                    <input type="text" id="report-title" placeholder="Monthly Expense Report">
+                </div>
+
+                <div class="erg-detail-row full-width">
+                    <label class="erg-editable-label" data-key="businessPurpose">
+                        <span class="erg-label-text">Business Purpose</span>
+                        <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                        </svg>
+                    </label>
+                    <textarea id="business-purpose" placeholder="Describe the business purpose for these expenses"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expense Table -->
+        <div class="erg-expense-table">
+            <!-- Table Header -->
+            <div class="erg-table-header">
+                <div class="erg-editable-header sortable" data-key="date" data-sort="date" draggable="true">
+                    <span class="erg-header-text">Date</span>
+                    <span class="erg-sort-icon">↕</span>
+                    <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                    </svg>
+                </div>
+                <div class="erg-editable-header sortable" data-key="description" data-sort="description" draggable="true">
+                    <span class="erg-header-text">Expense Description</span>
+                    <span class="erg-sort-icon">↕</span>
+                    <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                    </svg>
+                </div>
+                <div class="erg-editable-header sortable" data-key="merchant" data-sort="merchant" draggable="true">
+                    <span class="erg-header-text">Merchant</span>
+                    <span class="erg-sort-icon">↕</span>
+                    <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                    </svg>
+                </div>
+                <div class="erg-editable-header sortable" data-key="amount" data-sort="amount" draggable="true">
+                    <span class="erg-header-text">Amount</span>
+                    <span class="erg-sort-icon">↕</span>
+                    <svg class="erg-edit-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4L18.5 2.5z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Expense Rows -->
+            <div id="expense-rows">
+                <div class="erg-expense-row" data-row="1" draggable="true">
+                    <div class="erg-drag-handle">
+                        <span class="erg-drag-icon">⋮⋮</span>
+                    </div>
+                    <div class="col-date">
+                        <input type="date" value="2024-01-15">
+                    </div>
+                    <div class="col-description">
+                        <input type="text" value="Office Supplies" placeholder="Expense Description">
+                    </div>
+                    <div class="col-merchant">
+                        <input type="text" value="Staples" placeholder="Merchant Name">
+                    </div>
+                    <div class="col-amount">
+                        <input type="number" step="0.01" min="0" value="45.67">
+                    </div>
+                </div>
+                <div class="erg-expense-row" data-row="2" draggable="true">
+                    <div class="erg-drag-handle">
+                        <span class="erg-drag-icon">⋮⋮</span>
+                    </div>
+                    <div class="col-date">
+                        <input type="date" value="2024-01-12">
+                    </div>
+                    <div class="col-description">
+                        <input type="text" value="Client Lunch" placeholder="Expense Description">
+                    </div>
+                    <div class="col-merchant">
+                        <input type="text" value="Restaurant ABC" placeholder="Merchant Name">
+                    </div>
+                    <div class="col-amount">
+                        <input type="number" step="0.01" min="0" value="89.50">
+                    </div>
+                </div>
+                <div class="erg-expense-row" data-row="3" draggable="true">
+                    <div class="erg-drag-handle">
+                        <span class="erg-drag-icon">⋮⋮</span>
+                    </div>
+                    <div class="col-date">
+                        <input type="date" value="2024-01-18">
+                    </div>
+                    <div class="col-description">
+                        <input type="text" value="Gas" placeholder="Expense Description">
+                    </div>
+                    <div class="col-merchant">
+                        <input type="text" value="Shell" placeholder="Merchant Name">
+                    </div>
+                    <div class="col-amount">
+                        <input type="number" step="0.01" min="0" value="32.20">
+                    </div>
+                </div>
+                <div class="erg-expense-row" data-row="4" draggable="true">
+                    <div class="erg-drag-handle">
+                        <span class="erg-drag-icon">⋮⋮</span>
+                    </div>
+                    <div class="col-date">
+                        <input type="date" value="2024-01-10">
+                    </div>
+                    <div class="col-description">
+                        <input type="text" value="Software Subscription" placeholder="Expense Description">
+                    </div>
+                    <div class="col-merchant">
+                        <input type="text" value="Adobe" placeholder="Merchant Name">
+                    </div>
+                    <div class="col-amount">
+                        <input type="number" step="0.01" min="0" value="19.99">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Expense Button -->
+        <div class="erg-expense-actions">
+            <button id="add-new-expense">Add New Expense</button>
+        </div>
+
+        <!-- Total Section -->
+        <div class="erg-total-section">
+            <div class="erg-total-label">TOTAL</div>
+            <div class="erg-total-amount">
+                <span class="currency-symbol">$</span>
+                <span id="total-amount">0.00</span>
+            </div>
+        </div>
+
+        <!-- Footer Branding -->
+        <div class="erg-footer-branding">
+            <div class="erg-powered-by">
+                <span>Powered by</span>
+                <div class="erg-taskip-logo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="3" width="7" height="7" fill="#00B289" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" fill="#00B289" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" fill="#00B289" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" fill="#00B289" rx="1"/>
+                    </svg>
+                    <span class="erg-taskip-text">Taskip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customization Panel -->
+    <div class="erg-customization-overlay"></div>
+    <div class="erg-customization-panel">
+        <div class="erg-panel-header">
+            <h3>Customize Report</h3>
+            <button class="erg-panel-close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="erg-panel-content">
+            <!-- Colors & Branding Section -->
+            <div class="erg-panel-section">
+                <h4>Colors & Branding</h4>
+                <div class="erg-panel-row">
+                    <label>Header Background:</label>
+                    <input type="color" class="erg-color-input" data-color="headerBackground" value="#6c757d">
+                </div>
+                <div class="erg-panel-row">
+                    <label>Header Text:</label>
+                    <input type="color" class="erg-color-input" data-color="headerText" value="#ffffff">
+                </div>
+                <div class="erg-panel-row">
+                    <label>Total Background:</label>
+                    <input type="color" class="erg-color-input" data-color="totalBackground" value="#f8f9fa">
+                </div>
+                <div class="erg-panel-row">
+                    <label>Total Border:</label>
+                    <input type="color" class="erg-color-input" data-color="totalBorder" value="#dddddd">
+                </div>
+            </div>
+
+            <!-- Typography Section -->
+            <div class="erg-panel-section">
+                <h4>Typography</h4>
+                <div class="erg-panel-row">
+                    <label>Font Family:</label>
+                    <div class="erg-font-selector">
+                        <div class="erg-font-current">System Default</div>
+                        <svg class="erg-dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"></polyline>
+                        </svg>
+                        <div class="erg-font-dropdown">
+                            <div class="erg-font-option" data-font="system-ui, -apple-system, sans-serif">System Default</div>
+                            <div class="erg-font-option" data-font="Georgia, serif">Georgia</div>
+                            <div class="erg-font-option" data-font='"Times New Roman", serif'>Times New Roman</div>
+                            <div class="erg-font-option" data-font="Arial, sans-serif">Arial</div>
+                            <div class="erg-font-option" data-font='"Helvetica Neue", sans-serif'>Helvetica</div>
+                            <div class="erg-font-option" data-font='"Open Sans", sans-serif'>Open Sans</div>
+                            <div class="erg-font-option" data-font='"Roboto", sans-serif'>Roboto</div>
+                            <div class="erg-font-option" data-font='"Lato", sans-serif'>Lato</div>
+                            <div class="erg-font-option" data-font='"Montserrat", sans-serif'>Montserrat</div>
+                            <div class="erg-font-option" data-font='"Source Sans Pro", sans-serif'>Source Sans Pro</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date Format Section -->
+            <div class="erg-panel-section">
+                <h4>Date Format</h4>
+                <div class="erg-panel-row">
+                    <label>Format:</label>
+                    <div class="erg-date-selector">
+                        <div class="erg-date-current">ISO (YYYY-MM-DD)</div>
+                        <svg class="erg-dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"></polyline>
+                        </svg>
+                        <div class="erg-date-dropdown">
+                            <div class="erg-date-option" data-format="YYYY-MM-DD">ISO (YYYY-MM-DD)</div>
+                            <div class="erg-date-option" data-format="MM/DD/YYYY">US (MM/DD/YYYY)</div>
+                            <div class="erg-date-option" data-format="DD/MM/YYYY">EU (DD/MM/YYYY)</div>
+                            <div class="erg-date-option" data-format="DD.MM.YYYY">German (DD.MM.YYYY)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Settings Section -->
+            <div class="erg-panel-section">
+                <h4>Report Settings</h4>
+                <div class="erg-panel-row">
+                    <label>Report Number Format:</label>
+                    <div class="erg-report-format-selector">
+                        <div class="erg-format-current">ER-10001</div>
+                        <svg class="erg-dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"></polyline>
+                        </svg>
+                        <div class="erg-report-format-editor">
+                            <div class="erg-editor-field">
+                                <label>Format Pattern:</label>
+                                <input type="text" class="erg-format-input" value="ER-{number}" placeholder="Use {number} for auto-increment">
+                            </div>
+                            <div class="erg-editor-field">
+                                <label>Start Number:</label>
+                                <input type="number" class="erg-start-number-input" value="10001" min="1">
+                            </div>
+                            <div class="erg-editor-field">
+                                <label>
+                                    <input type="checkbox" class="erg-auto-increment" checked>
+                                    Auto-increment numbers
+                                </label>
+                            </div>
+                            <div class="erg-format-preview">Preview: ER-10001</div>
+                            <div class="erg-editor-buttons">
+                                <button class="erg-format-save">Save</button>
+                                <button class="erg-format-cancel">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="erg-panel-section">
+                <div class="erg-panel-actions">
+                    <button class="erg-reset-btn">Reset to Defaults</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Scripts -->
+    <script src="assets/js/expense-store.js"></script>
+    <script src="assets/js/expense-report.js"></script>
+
+    <script>
+        // Debug logging
+        console.log('Test page loaded');
+        console.log('jQuery loaded:', typeof jQuery !== 'undefined');
+        console.log('jsPDF loaded:', typeof window.jsPDF !== 'undefined');
+
+        // Wait a moment for scripts to initialize
+        setTimeout(() => {
+            console.log('ERGExpenseStore available:', typeof window.ERGExpenseStore !== 'undefined');
+            if (window.ERGExpenseStore) {
+                console.log('Store state:', window.ERGExpenseStore.getState());
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

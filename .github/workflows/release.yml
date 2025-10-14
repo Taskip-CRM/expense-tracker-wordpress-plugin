@@ -1,0 +1,290 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  NODE_VERSION: '18'
+  PHP_VERSION: '8.1'
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -f CHANGELOG.md ]; then
+            # Extract changelog for this version
+            awk "/^## \[${{ steps.get_version.outputs.version }}\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md > release_notes.md
+          else
+            echo "Release ${{ steps.get_version.outputs.version }}" > release_notes.md
+            echo "" >> release_notes.md
+            echo "## Changes" >> release_notes.md
+            git log --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD~1)..HEAD >> release_notes.md
+          fi
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.get_version.outputs.version }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+
+  build-and-package:
+    name: Build and Package
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update version in files
+        run: |
+          # Update version in package.json
+          npm version ${{ needs.create-release.outputs.version }} --no-git-tag-version
+
+          # Update version in PHP file
+          sed -i "s/Version: [0-9].[0-9].[0-9]/Version: ${{ needs.create-release.outputs.version }}/g" expense-report-generator.php
+          sed -i "s/ERG_PLUGIN_VERSION', '[0-9].[0-9].[0-9]/ERG_PLUGIN_VERSION', '${{ needs.create-release.outputs.version }}/g" expense-report-generator.php
+
+          # Update version in readme.txt
+          sed -i "s/Stable tag: [0-9].[0-9].[0-9]/Stable tag: ${{ needs.create-release.outputs.version }}/g" readme.txt
+
+      - name: Build production
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Create plugin package
+        run: |
+          # Create plugin directory structure
+          mkdir -p dist/expense-report-generator
+
+          # Copy essential files
+          cp -r assets dist/expense-report-generator/
+          cp -r includes dist/expense-report-generator/
+          cp -r languages dist/expense-report-generator/ 2>/dev/null || true
+          cp expense-report-generator.php dist/expense-report-generator/
+          cp readme.txt dist/expense-report-generator/
+          cp LICENSE dist/expense-report-generator/
+          cp INSTALLATION.md dist/expense-report-generator/
+
+          # Remove development files from assets
+          find dist/expense-report-generator/assets -name "*.map" -delete
+          rm -rf dist/expense-report-generator/assets/reports 2>/dev/null || true
+
+          # Create zip file
+          cd dist
+          zip -r expense-report-generator-${{ needs.create-release.outputs.version }}.zip expense-report-generator/
+          cd ..
+
+          # Create source code archive
+          git archive --format=zip --prefix=expense-report-generator-${{ needs.create-release.outputs.version }}-src/ HEAD > dist/expense-report-generator-${{ needs.create-release.outputs.version }}-src.zip
+
+      - name: Upload plugin package
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./dist/expense-report-generator-${{ needs.create-release.outputs.version }}.zip
+          asset_name: expense-report-generator-${{ needs.create-release.outputs.version }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload source code
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./dist/expense-report-generator-${{ needs.create-release.outputs.version }}-src.zip
+          asset_name: expense-report-generator-${{ needs.create-release.outputs.version }}-src.zip
+          asset_content_type: application/zip
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum *.zip > checksums.txt
+          cd ..
+
+      - name: Upload checksums
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./dist/checksums.txt
+          asset_name: checksums.txt
+          asset_content_type: text/plain
+
+  deploy-wordpress-org:
+    name: Deploy to WordPress.org
+    runs-on: ubuntu-latest
+    needs: [create-release, build-and-package]
+    if: ${{ secrets.WP_ORG_USERNAME && !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build
+
+      - name: WordPress.org plugin deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.WP_ORG_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WP_ORG_PASSWORD }}
+          SLUG: expense-report-generator
+          VERSION: ${{ needs.create-release.outputs.version }}
+
+  update-marketplace:
+    name: Update Marketplace Listings
+    runs-on: ubuntu-latest
+    needs: [create-release, build-and-package]
+    if: ${{ !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc') }}
+    steps:
+      - name: Update CodeCanyon listing
+        if: ${{ secrets.CODECANYON_API_KEY }}
+        run: |
+          echo "Updating CodeCanyon listing..."
+          # Add CodeCanyon API calls here
+
+      - name: Update GitHub Marketplace
+        if: ${{ secrets.GITHUB_MARKETPLACE_TOKEN }}
+        run: |
+          echo "Updating GitHub Marketplace..."
+          # Add GitHub Marketplace API calls here
+
+  notify-team:
+    name: Notify Team
+    runs-on: ubuntu-latest
+    needs: [create-release, build-and-package, deploy-wordpress-org]
+    if: always()
+    steps:
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            🚀 **Release ${{ needs.create-release.outputs.version }}**
+
+            ${{ job.status == 'success' && '✅ Successfully released!' || '❌ Release failed!' }}
+
+            📦 Download: ${{ github.event.release.html_url }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Discord
+        if: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: |
+            🚀 **ERG Release ${{ needs.create-release.outputs.version }}**
+
+            ${{ job.status == 'success' && '✅ Successfully released!' || '❌ Release failed!' }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Send email notification
+        if: ${{ secrets.NOTIFICATION_EMAIL }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "ERG Release ${{ needs.create-release.outputs.version }} - ${{ job.status }}"
+          body: |
+            Release ${{ needs.create-release.outputs.version }} has been ${{ job.status }}.
+
+            Download: ${{ github.event.release.html_url }}
+
+            Pipeline status: ${{ job.status }}
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: ${{ secrets.EMAIL_USERNAME }}
+
+  post-release-tasks:
+    name: Post-Release Tasks
+    runs-on: ubuntu-latest
+    needs: [create-release, build-and-package]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create next development version
+        run: |
+          # Switch to develop branch
+          git checkout develop 2>/dev/null || git checkout -b develop
+
+          # Update version to next dev version
+          CURRENT_VERSION=${{ needs.create-release.outputs.version }}
+          NEXT_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$3++; print $1"."$2"."$3}')
+
+          # Update package.json
+          npm version $NEXT_VERSION-dev --no-git-tag-version
+
+          # Update PHP file
+          sed -i "s/Version: $CURRENT_VERSION/Version: $NEXT_VERSION-dev/g" expense-report-generator.php
+          sed -i "s/ERG_PLUGIN_VERSION', '$CURRENT_VERSION/ERG_PLUGIN_VERSION', '$NEXT_VERSION-dev/g" expense-report-generator.php
+
+          # Commit changes
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Bump version to $NEXT_VERSION-dev for development" || true
+          git push origin develop || true
+
+      - name: Update documentation
+        run: |
+          echo "Updating documentation for version ${{ needs.create-release.outputs.version }}"
+          # Add documentation update tasks here
+
+      - name: Clean up old releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Keep only the last 10 releases
+          gh release list --limit 100 --json tagName,createdAt | \
+          jq -r 'sort_by(.createdAt) | reverse | .[10:] | .[].tagName' | \
+          head -20 | \
+          xargs -I {} gh release delete {} --yes || true

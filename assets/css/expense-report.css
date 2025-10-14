@@ -1,0 +1,1249 @@
+/* Simple Expense Report Generator Styles */
+/* Scoped to prevent conflicts with other WordPress themes/plugins */
+
+/* Container */
+.erg-expense-report-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #333333;
+    line-height: 1.6;
+}
+
+/* Top Header with Title and Controls (Outside container) */
+.erg-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto 20px auto;
+    padding: 20px 0;
+    max-width: 900px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.erg-main-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    color: #333333;
+    line-height: 1.2;
+}
+
+.erg-top-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Report Header */
+.erg-report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+/* Header Variants */
+.erg-header-centered {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.erg-header-centered .erg-company-info {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.erg-header-centered .erg-report-info {
+    text-align: center;
+}
+
+.erg-header-modern {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.erg-header-modern .erg-company-info {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.erg-header-modern .erg-report-info {
+    text-align: left;
+}
+
+.erg-header-minimal .erg-company-info {
+    display: none;
+}
+
+.erg-header-minimal .erg-report-info {
+    text-align: center;
+    width: 100%;
+}
+
+/* Company Logo */
+.erg-company-logo {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    min-height: 60px;
+}
+
+.erg-logo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f9f9f9;
+}
+
+.erg-logo-placeholder:hover {
+    border-color: #007cba;
+    background: #f0f8ff;
+}
+
+.erg-logo-placeholder svg {
+    margin-bottom: 8px;
+    color: #666;
+}
+
+.erg-logo-text {
+    font-size: 14px;
+    color: #666;
+}
+
+.erg-logo-image {
+    max-width: 120px;
+    max-height: 60px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.erg-logo-remove {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.erg-logo-remove:hover {
+    background: #c82333;
+}
+
+/* Company Info - Stack Vertically */
+.erg-company-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.erg-company-info .erg-editable-label {
+    margin: 0;
+    padding: 4px 6px;
+    font-size: 14px;
+    color: #333333;
+    display: block;
+    line-height: 1.4;
+}
+
+.erg-report-info {
+    text-align: right;
+}
+
+.erg-report-info h1 {
+    margin: 0 0 10px 0;
+    font-size: 36px;
+    font-weight: 300;
+    color: #333333;
+}
+
+.erg-report-number {
+    font-size: 16px;
+    color: #666666;
+    margin-bottom: 20px;
+}
+
+/* Report Details Section */
+.erg-report-details {
+    margin: 30px 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+}
+
+.erg-expense-report-container .erg-details-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    align-items: start !important;
+}
+
+.erg-expense-report-container .erg-detail-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin-bottom: 20px !important;
+}
+
+.erg-expense-report-container .erg-detail-row label {
+    font-weight: 500 !important;
+    color: #333333 !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+    text-align: left !important;
+    padding: 0 !important;
+}
+
+.erg-expense-report-container .erg-detail-row input,
+.erg-expense-report-container .erg-detail-row textarea {
+    padding: 8px 12px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    background: #ffffff !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    margin: 0 !important;
+}
+
+.erg-expense-report-container .erg-detail-row input:focus,
+.erg-expense-report-container .erg-detail-row textarea:focus {
+    outline: none !important;
+    border-color: #007cba !important;
+    box-shadow: 0 0 0 2px rgba(0, 124, 186, 0.1) !important;
+}
+
+.erg-expense-report-container .erg-detail-row textarea {
+    resize: vertical !important;
+    min-height: 80px !important;
+    font-family: inherit !important;
+}
+
+/* Date Range Styling */
+.erg-expense-report-container .erg-date-range {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.erg-expense-report-container .erg-date-range span {
+    color: #666666 !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+}
+
+.erg-expense-report-container .erg-date-range input {
+    flex: 1 !important;
+}
+
+/* Full width items */
+.erg-detail-row.full-width {
+    grid-column: 1 / -1;
+    grid-template-columns: 140px 1fr;
+}
+
+/* Expense Table */
+.erg-expense-table {
+    margin: 30px 0;
+}
+
+.erg-table-header {
+    display: grid;
+    grid-template-columns: 30px 140px 1fr 180px 120px;
+    gap: 0;
+    background: #6c757d;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+}
+
+/* Empty space for drag handle column */
+.erg-table-header::before {
+    content: "";
+    padding: 16px 8px;
+    border-right: 1px solid #5a6268;
+    background: #6c757d;
+}
+
+.erg-editable-header {
+    padding: 16px 20px;
+    border-right: 1px solid #5a6268;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none !important;
+    outline: none !important;
+}
+
+.erg-editable-header:last-child {
+    border-right: none;
+}
+
+.erg-editable-header:hover {
+    background-color: #5a6268;
+}
+
+.erg-editable-header.sortable {
+    cursor: pointer;
+    position: relative;
+}
+
+.erg-expense-report-container .erg-sort-icon {
+    display: inline-block !important;
+    margin-left: 8px !important;
+    opacity: 0.5 !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    transition: opacity 0.2s ease !important;
+    cursor: pointer !important;
+    padding: 2px 4px !important;
+    border-radius: 2px !important;
+    user-select: none !important;
+    visibility: visible !important;
+    color: #ffffff !important;
+    font-family: monospace !important;
+    vertical-align: middle !important;
+}
+
+.erg-expense-report-container .erg-editable-header.sortable:hover .erg-sort-icon {
+    opacity: 0.8 !important;
+}
+
+.erg-expense-report-container .erg-sort-icon:hover {
+    opacity: 1 !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.erg-expense-report-container .erg-editable-header.sorted-asc .erg-sort-icon,
+.erg-expense-report-container .erg-editable-header.sorted-desc .erg-sort-icon {
+    opacity: 1 !important;
+    color: #ffffff !important;
+}
+
+.erg-editable-header.editing .erg-edit-icon {
+    display: none;
+}
+
+/* Inline editing input */
+.erg-inline-edit {
+    background: #ffffff;
+    color: #333333;
+    border: 2px solid #007cba;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.erg-edit-icon {
+    margin-left: 8px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.erg-editable-header:hover .erg-edit-icon {
+    opacity: 1;
+}
+
+/* Expense Rows */
+#expense-rows {
+    border: 1px solid #e9ecef;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+}
+
+.erg-expense-row {
+    display: grid;
+    grid-template-columns: 30px 140px 1fr 180px 120px;
+    gap: 0;
+    border-bottom: 1px solid #e9ecef;
+    background: #ffffff;
+    transition: background-color 0.2s ease;
+    align-items: center;
+}
+
+.erg-expense-row:last-child {
+    border-bottom: none;
+}
+
+.erg-expense-row:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.erg-expense-row:hover {
+    background: #e3f2fd;
+}
+
+.erg-expense-row > div {
+    padding: 12px 16px;
+    border-right: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+}
+
+.erg-expense-row > div:last-child {
+    border-right: none;
+}
+
+/* Drag Handle Styles */
+.erg-drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    border-right: 1px solid #e9ecef;
+    cursor: grab;
+    background: transparent;
+    transition: background-color 0.2s ease;
+}
+
+.erg-drag-handle:hover {
+    background: #f8f9fa;
+}
+
+.erg-drag-handle:active {
+    cursor: grabbing;
+}
+
+.erg-expense-report-container .erg-drag-icon {
+    color: #999999 !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    user-select: none !important;
+    font-family: monospace !important;
+    transform: rotate(90deg) !important;
+    display: inline-block !important;
+    opacity: 0.6 !important;
+    transition: opacity 0.2s ease !important;
+}
+
+.erg-drag-handle:hover .erg-drag-icon {
+    opacity: 1 !important;
+    color: #666666 !important;
+}
+
+/* Drag and Drop States */
+.erg-expense-report-container .erg-expense-row.erg-dragging {
+    opacity: 0.5 !important;
+    background: #f0f8ff !important;
+    border: 2px dashed #007cba !important;
+    transform: rotate(2deg) !important;
+}
+
+.erg-expense-report-container .erg-expense-row.erg-drop-zone {
+    border: 2px dashed #28a745 !important;
+    background: #f8fff8 !important;
+    opacity: 0.8 !important;
+}
+
+.erg-expense-report-container .erg-expense-row.erg-drag-over {
+    background: #e8f5e8 !important;
+    border: 2px solid #28a745 !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+}
+
+.erg-expense-report-container .erg-expense-row.erg-drop-success {
+    background: #d4edda !important;
+    border: 2px solid #28a745 !important;
+    animation: dropSuccess 0.5s ease-in-out !important;
+}
+
+@keyframes dropSuccess {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.erg-expense-row input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #333333;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.erg-expense-row input:focus {
+    background: #ffffff;
+    box-shadow: 0 0 0 2px #007cba;
+    outline: none;
+}
+
+.erg-expense-row input::placeholder {
+    color: #999999;
+    font-style: italic;
+}
+
+/* Add New Expense Button */
+.erg-expense-actions {
+    margin: 20px 0;
+    text-align: center;
+}
+
+#add-new-expense {
+    background: #00B289;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#add-new-expense:hover {
+    background: #009470;
+    transform: translateY(-1px);
+}
+
+#add-new-expense:active {
+    transform: translateY(0);
+}
+
+/* Total Section */
+.erg-total-section {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 30px;
+    padding: 20px 0;
+    border-top: 2px solid #dddddd;
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.erg-total-label {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333333;
+    margin-right: 20px;
+}
+
+.erg-total-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #007cba;
+}
+
+.currency-symbol {
+    margin-right: 2px;
+}
+
+/* Control Panel */
+.erg-control-panel {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.erg-customize-btn,
+.erg-download-btn {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.erg-customize-btn {
+    background: #00B289;
+    color: #ffffff;
+}
+
+.erg-customize-btn:hover {
+    background: #009470;
+    transform: translateY(-1px);
+}
+
+.erg-download-btn {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.erg-download-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+/* Editable Labels */
+.erg-editable-label {
+    position: relative;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.erg-editable-label:hover {
+    background-color: rgba(0, 124, 186, 0.1);
+}
+
+.erg-editable-label .erg-edit-icon {
+    margin-left: 6px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.erg-editable-label:hover .erg-edit-icon {
+    opacity: 0.6;
+}
+
+/* Label inline editing */
+.erg-label-inline-edit {
+    background: #ffffff;
+    color: #333333;
+    border: 2px solid #007cba;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: inherit;
+    font-weight: inherit;
+    min-width: 150px;
+}
+
+/* Edit feedback */
+.edit-success {
+    background-color: rgba(40, 167, 69, 0.2) !important;
+}
+
+.edit-error {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .erg-expense-report-container {
+        margin: 10px;
+        padding: 20px;
+    }
+
+    .erg-report-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .erg-report-info {
+        text-align: left;
+    }
+
+    .erg-table-header,
+    .erg-expense-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .erg-table-header > div,
+    .erg-expense-row > div {
+        border-right: none;
+        border-bottom: 1px solid #e9ecef;
+        justify-content: space-between;
+        padding: 12px 16px;
+    }
+
+    .erg-table-header > div:before,
+    .erg-expense-row > div:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #666666;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .erg-expense-row input {
+        text-align: right;
+        width: auto;
+        flex: 1;
+    }
+
+    .erg-control-panel {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .erg-customize-btn,
+    .erg-download-btn {
+        width: 200px;
+    }
+}
+
+/* Customization Panel */
+.erg-customization-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.erg-customization-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.erg-customization-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: #ffffff;
+    border-left: 1px solid #e9ecef;
+    z-index: 9999;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.erg-customization-panel.active {
+    right: 0;
+}
+
+.erg-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+.erg-panel-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.erg-panel-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    color: #666666;
+    transition: background-color 0.2s ease;
+}
+
+.erg-panel-close:hover {
+    background: #e9ecef;
+    color: #333333;
+}
+
+.erg-panel-content {
+    padding: 20px;
+}
+
+.erg-panel-section {
+    margin-bottom: 30px;
+}
+
+.erg-panel-section h4 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.erg-panel-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+.erg-panel-row label {
+    font-size: 14px;
+    color: #555555;
+    font-weight: 400;
+    flex: 1;
+}
+
+.erg-color-input {
+    width: 50px;
+    height: 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Font Selector */
+.erg-font-selector,
+.erg-date-selector,
+.erg-report-format-selector {
+    position: relative;
+    flex: 1;
+    max-width: 180px;
+}
+
+.erg-font-current,
+.erg-date-current,
+.erg-format-current {
+    padding: 8px 30px 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #ffffff;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    font-size: 14px;
+    color: #333333;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.erg-dropdown-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #666666;
+}
+
+.erg-font-dropdown,
+.erg-date-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10000;
+    display: none;
+}
+
+.erg-font-dropdown.active,
+.erg-date-dropdown.active {
+    display: block;
+}
+
+.erg-font-option,
+.erg-date-option {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333333;
+    transition: background-color 0.2s ease;
+}
+
+.erg-font-option:hover,
+.erg-date-option:hover {
+    background: #f8f9fa;
+}
+
+.erg-font-option.selected,
+.erg-date-option.selected {
+    background: #007cba;
+    color: #ffffff;
+}
+
+/* Report Format Editor */
+.erg-report-format-editor {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 16px;
+    z-index: 10000;
+    display: none;
+}
+
+.erg-report-format-editor.active {
+    display: block;
+}
+
+.erg-editor-field {
+    margin-bottom: 12px;
+}
+
+.erg-editor-field label {
+    display: block;
+    font-size: 12px;
+    color: #666666;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.erg-format-input,
+.erg-start-number-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.erg-auto-increment {
+    margin-right: 8px;
+}
+
+.erg-format-preview {
+    font-size: 12px;
+    color: #007cba;
+    font-weight: 500;
+    margin: 8px 0;
+}
+
+.erg-editor-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.erg-format-save,
+.erg-format-cancel {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.erg-format-save {
+    background: #007cba;
+    border-color: #007cba;
+    color: #ffffff;
+}
+
+.erg-format-save:hover {
+    background: #005a87;
+}
+
+.erg-format-cancel {
+    background: #ffffff;
+    color: #666666;
+}
+
+.erg-format-cancel:hover {
+    background: #f8f9fa;
+}
+
+/* Panel Actions */
+.erg-panel-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.erg-reset-btn {
+    padding: 10px 16px;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #dc3545;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.erg-reset-btn:hover {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+/* Footer Branding */
+.erg-footer-branding {
+    margin-top: 30px;
+    padding: 15px 0;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+}
+
+.erg-powered-by {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+}
+
+.erg-taskip-logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #00B289;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.erg-taskip-logo svg {
+    width: 16px;
+    height: 16px;
+}
+
+.erg-taskip-text {
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+/* Print Styles */
+@media print {
+    .erg-control-panel,
+    .erg-customization-panel,
+    .erg-customization-overlay {
+        display: none !important;
+    }
+
+    .erg-expense-report-container {
+        box-shadow: none;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .erg-editable-label .erg-edit-icon,
+    .erg-editable-header .erg-edit-icon {
+        display: none;
+    }
+
+    .erg-footer-branding {
+        display: none !important;
+    }
+}
+
+/* Enhanced Header Styles */
+/* Compact Header */
+.erg-header-compact {
+    padding: 15px 0;
+    margin-bottom: 25px;
+}
+
+.erg-header-compact .erg-company-info {
+    font-size: 13px;
+    gap: 4px;
+}
+
+.erg-header-compact .erg-report-info h1 {
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.erg-header-compact .erg-report-number {
+    font-size: 12px;
+}
+
+/* Standard Header (Default) */
+.erg-header-standard {
+    padding: 20px 0;
+    margin-bottom: 30px;
+}
+
+/* Detailed Header */
+.erg-header-detailed {
+    padding: 30px 0;
+    margin-bottom: 40px;
+}
+
+.erg-header-detailed .erg-company-info {
+    font-size: 15px;
+    gap: 10px;
+}
+
+.erg-header-detailed .erg-report-info h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+/* Modern Header with solid color */
+.erg-header-modern {
+    background: #667eea;
+    color: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 35px;
+    border-bottom: none;
+}
+
+.erg-header-modern .erg-editable-label {
+    color: white;
+}
+
+.erg-header-modern .erg-report-info h1 {
+    color: white;
+}
+
+/* Classic Header with formal styling */
+.erg-header-classic {
+    background: #f8f9fa;
+    border: 2px solid #333;
+    padding: 25px;
+    margin-bottom: 35px;
+}
+
+.erg-header-classic .erg-company-info {
+    font-family: 'Times New Roman', serif;
+}
+
+.erg-header-classic .erg-report-info h1 {
+    font-family: 'Times New Roman', serif;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Header Layout Styles */
+.erg-header-styles {
+    margin-bottom: 20px;
+}
+
+.erg-header-style-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.erg-header-style-option {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.erg-header-style-option:hover {
+    border-color: #007cba;
+    box-shadow: 0 2px 8px rgba(0, 124, 186, 0.15);
+    transform: translateY(-1px);
+}
+
+.erg-header-style-option.selected {
+    border-color: #007cba;
+    background: #f0f8ff;
+    box-shadow: 0 3px 12px rgba(0, 124, 186, 0.25);
+    transform: translateY(-2px);
+}
+
+.erg-style-svg-preview {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.erg-style-svg-preview svg {
+    border-radius: 4px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+}
+
+.erg-style-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.erg-style-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.erg-style-desc {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .erg-header-style-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .erg-header-style-option {
+        padding: 12px;
+    }
+
+    .erg-style-svg-preview svg {
+        width: 70px;
+        height: 44px;
+    }
+}
+
+/* Enhanced Color Groups */
+.erg-color-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.erg-color-group h5 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
