@@ -3,7 +3,7 @@
  * Plugin Name: Simple Expense Report Generator
  * Plugin URI: https://github.com/your-username/simple-expense-report
  * Description: Create and export professional expense reports as PDF with a simple invoice-style interface.
- * Version: 2.1.0
+ * Version: 2.1.1
  * Author: Sharifur
  * Author URI: https://taskip.net
  * License: GPL v2 or later
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('ERG_PLUGIN_VERSION', '2.1.0');
+define('ERG_PLUGIN_VERSION', '2.1.1');
 define('ERG_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ERG_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('ERG_PLUGIN_FILE', __FILE__);
@@ -32,6 +32,7 @@ define('ERG_PLUGIN_BASENAME', plugin_basename(__FILE__));
 class ERG_Simple_Expense_Report {
 
     private static $instance = null;
+    private $shortcode_used = false;
 
     public static function get_instance() {
         if (null === self::$instance) {
@@ -46,7 +47,8 @@ class ERG_Simple_Expense_Report {
     }
 
     private function init_hooks() {
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        // Register scripts but don't enqueue yet
+        add_action('wp_enqueue_scripts', array($this, 'register_scripts'));
         add_shortcode('expense_report_generator', array($this, 'render_shortcode'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_init', array($this, 'admin_init'));
@@ -56,17 +58,19 @@ class ERG_Simple_Expense_Report {
         require_once ERG_PLUGIN_PATH . 'includes/class-erg-shortcode-handler.php';
     }
 
-    public function enqueue_scripts() {
-        // Load scripts on all frontend pages to ensure compatibility
+    /**
+     * Register scripts and styles (but don't enqueue them yet)
+     */
+    public function register_scripts() {
         if (!is_admin()) {
-            wp_enqueue_style(
+            wp_register_style(
                 'erg-expense-report-style',
                 ERG_PLUGIN_URL . 'assets/css/expense-report.css',
                 array(),
                 ERG_PLUGIN_VERSION
             );
 
-            wp_enqueue_script(
+            wp_register_script(
                 'erg-expense-store',
                 ERG_PLUGIN_URL . 'assets/js/expense-store.js',
                 array(),
@@ -74,7 +78,7 @@ class ERG_Simple_Expense_Report {
                 true
             );
 
-            wp_enqueue_script(
+            wp_register_script(
                 'erg-expense-report-js',
                 ERG_PLUGIN_URL . 'assets/js/expense-report.js',
                 array('jquery', 'erg-expense-store'),
@@ -82,17 +86,30 @@ class ERG_Simple_Expense_Report {
                 true
             );
 
-            wp_enqueue_script(
+            wp_register_script(
                 'jspdf',
                 ERG_PLUGIN_URL . 'assets/js/jspdf.min.js',
                 array(),
                 ERG_PLUGIN_VERSION,
-                false // Load in header to ensure it's available
+                false
             );
         }
     }
 
+    /**
+     * Enqueue scripts only when shortcode is used
+     */
+    public function enqueue_scripts() {
+        wp_enqueue_style('erg-expense-report-style');
+        wp_enqueue_script('jspdf');
+        wp_enqueue_script('erg-expense-store');
+        wp_enqueue_script('erg-expense-report-js');
+    }
+
     public function render_shortcode($atts) {
+        // Enqueue scripts only when shortcode is actually used
+        $this->enqueue_scripts();
+
         $handler = new ERG_Shortcode_Handler();
         return $handler->render($atts);
     }
